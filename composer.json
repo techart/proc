@@ -1,0 +1,22 @@
+{
+    "name": "techart/proc",
+    "description": "Работа с процессами и pipe",
+    "version" : "3.0.2",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Techart",
+            "homepage": "http://web-techart.ru/"
+        }
+    ],
+    "autoload" : {
+        "psr-4": {
+            "Techart\\IO\\": "src/Proc"
+        },
+        "classmap": ["src/Proc.php"]
+    },
+    "require": {
+        "PHP": ">=5.5",
+        "techart/io": ">=3.0.0"
+    }
+}
