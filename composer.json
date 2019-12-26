@@ -1,7 +1,7 @@
 {
     "name": "techart/proc",
     "description": "Работа с процессами и pipe",
-    "version" : "3.0.4",
+    "version" : "3.0.6",
     "license": "Apache-2.0",
     "authors": [
         {

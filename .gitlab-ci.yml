@@ -1,0 +1,31 @@
+variables:
+  GITHUB_URL: "git@github.com:techart/proc.git"
+  GITHUB_TMP: /tmp/proc.git.github.tmp/
+  GITLAB_TMP: /tmp/proc.git.gitlab.tmp/
+
+github:deploy:
+ script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - git clone https://git:${PERSONAL_ACCESS_TOKEN}@gitlab.techart.ru/techart/proc.git $GITLAB_TMP
+    - GITLAB_V=`cat "$GITLAB_TMP"/composer.json |grep version|awk -F ":" '{print $2}'|sed 's|,||g'|sed 's|"||g'|sed 's| ||g'`
+    - git clone git@github.com:techart/proc.git $GITHUB_TMP
+    - GITHUB_V=`cat "$GITHUB_TMP"/composer.json |grep version|awk -F ":" '{print $2}'|sed 's|,||g'|sed 's|"||g'|sed 's| ||g'`      
+    - VER=`cat "$GITLAB_TMP"/composer.json |grep version|awk -F ":" '{print $2}'|sed 's|,||g'|sed 's|"||g'|sed 's| ||g'`
+    - cd $GITLAB_TMP;git tag "$VER"
+    - cd $GITLAB_TMP;git push https://git:${PERSONAL_ACCESS_TOKEN}@gitlab.techart.ru/techart/proc.git master:master --tags
+    - cd $GITLAB_TMP;rm -rf ".git"
+    - rsync -r --exclude='.git/' --delete $GITLAB_TMP $GITHUB_TMP
+    - cd $GITHUB_TMP;git config user.name "TechartWebDev"
+    - cd $GITHUB_TMP;git config user.email "webdev@techart.ru"
+    - cd $GITHUB_TMP;git add --all
+    - cd $GITHUB_TMP;git commit -a -m"Version $VER"
+    - cd $GITHUB_TMP;git tag "$VER"
+    - cd $GITHUB_TMP;git push origin master:master --tags
+ after_script:
+    - rm -rf $GITHUB_TMP
+    - rm -rf $GITLAB_TMP
+ only:
+  refs:
+   - master
+
