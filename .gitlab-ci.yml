@@ -28,4 +28,6 @@ github:deploy:
  only:
   refs:
    - master
+  changes:
+   - composer.json
 
